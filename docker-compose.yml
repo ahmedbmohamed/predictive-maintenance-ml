@@ -1,0 +1,17 @@
+services:
+  api:
+    build: .
+    image: predictive-maintenance:latest
+    ports:
+      - "8000:8000"
+
+  dashboard:
+    image: predictive-maintenance:latest
+    depends_on:
+      - api
+    command: ["streamlit", "run", "dashboard/app.py", "--server.address=0.0.0.0", "--server.port=8501"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')"]
+      interval: 30s
+    ports:
+      - "8501:8501"

@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Lint, test and train
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install
+        run: |
+          pip install -r requirements-dev.txt
+          pip install -e .
+
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Tests
+        run: pytest -q
+
+      - name: Train full model
+        run: python -m pdm.train
+
+      - name: Quality gate
+        # Fails the pipeline if a change makes the model worse.
+        run: |
+          python - <<'PY'
+          import json, sys
+          m = json.load(open("reports/metrics.json"))["test_metrics"]
+          print(json.dumps(m, indent=2))
+          gates = {"recall": 0.75, "precision": 0.80, "pr_auc": 0.80}
+          failed = [k for k, v in gates.items() if m[k] < v]
+          sys.exit(f"Quality gate failed on {failed}" if failed else 0)
+          PY
+
+      - name: Upload model and report
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-and-report
+          path: |
+            models/model.joblib
+            reports/
+
+  docker:
+    name: Build and smoke test the image
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: docker build -t predictive-maintenance:ci .
+
+      - name: Smoke test the API
+        run: |
+          docker run -d --name api -p 8000:8000 predictive-maintenance:ci
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8000/health && break
+            sleep 2
+          done
+          curl -sf -X POST http://localhost:8000/predict \
+            -H "Content-Type: application/json" \
+            -d '{"product_type":"L","air_temp_k":300,"process_temp_k":310,"rotational_speed_rpm":1300,"torque_nm":65,"tool_wear_min":220}' \
+            | tee response.json
+          grep -q FAILURE_RISK response.json
+          docker rm -f api

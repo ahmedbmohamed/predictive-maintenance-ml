@@ -1,0 +1,120 @@
+{
+  "model_version": "1.0.0",
+  "trained_at": "2026-10-10T19:55:15+00:00",
+  "dataset": {
+    "rows": 10000,
+    "failures": 339,
+    "failure_rate": 0.0339,
+    "train_rows": 8000,
+    "test_rows": 2000,
+    "label_consistency": {
+      "failure_without_mode": 9,
+      "mode_without_failure": 18
+    }
+  },
+  "model_comparison_cv": {
+    "logistic_regression": {
+      "cv_pr_auc_mean": 0.4585,
+      "cv_pr_auc_std": 0.0417,
+      "cv_roc_auc_mean": 0.9233
+    },
+    "random_forest": {
+      "cv_pr_auc_mean": 0.8937,
+      "cv_pr_auc_std": 0.0251,
+      "cv_roc_auc_mean": 0.9826
+    },
+    "gradient_boosting": {
+      "cv_pr_auc_mean": 0.8869,
+      "cv_pr_auc_std": 0.0189,
+      "cv_roc_auc_mean": 0.9741
+    }
+  },
+  "selected_model": "random_forest",
+  "test_metrics": {
+    "threshold": 0.399,
+    "roc_auc": 0.9782,
+    "pr_auc": 0.879,
+    "precision": 0.918,
+    "recall": 0.8235,
+    "f1": 0.8682,
+    "f2": 0.8408,
+    "true_positives": 56,
+    "false_positives": 5,
+    "false_negatives": 12,
+    "true_negatives": 1927
+  },
+  "test_metrics_default_threshold": {
+    "threshold": 0.5,
+    "roc_auc": 0.9782,
+    "pr_auc": 0.879,
+    "precision": 0.9483,
+    "recall": 0.8088,
+    "f1": 0.873,
+    "f2": 0.8333,
+    "true_positives": 55,
+    "false_positives": 3,
+    "false_negatives": 13,
+    "true_negatives": 1929
+  },
+  "ablation_without_engineered_features": {
+    "threshold": 0.2897,
+    "roc_auc": 0.9717,
+    "pr_auc": 0.7652,
+    "precision": 0.5699,
+    "recall": 0.7794,
+    "f1": 0.6584,
+    "f2": 0.726,
+    "true_positives": 53,
+    "false_positives": 40,
+    "false_negatives": 15,
+    "true_negatives": 1892
+  },
+  "isolation_forest_test_metrics": {
+    "threshold": 0.5856,
+    "roc_auc": 0.8517,
+    "pr_auc": 0.2013,
+    "precision": 0.2656,
+    "recall": 0.25,
+    "f1": 0.2576,
+    "f2": 0.253,
+    "true_positives": 17,
+    "false_positives": 47,
+    "false_negatives": 51,
+    "true_negatives": 1885
+  },
+  "recall_by_failure_mode": {
+    "TWF": {
+      "count": 10,
+      "recall": 0.2
+    },
+    "HDF": {
+      "count": 29,
+      "recall": 0.966
+    },
+    "PWF": {
+      "count": 13,
+      "recall": 0.923
+    },
+    "OSF": {
+      "count": 16,
+      "recall": 1.0
+    },
+    "RNF": {
+      "count": 4,
+      "recall": 0.0
+    }
+  },
+  "permutation_importance": {
+    "rotational_speed_rpm": 0.3948,
+    "temp_diff_k": 0.2529,
+    "strain_min_nm": 0.1325,
+    "power_w": 0.0906,
+    "tool_wear_min": 0.038,
+    "torque_nm": 0.0354,
+    "type_L": 0.0105,
+    "type_M": 0.0036,
+    "type_H": 0.001,
+    "air_temp_k": -0.0053,
+    "process_temp_k": -0.0115
+  }
+}
