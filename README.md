@@ -141,6 +141,12 @@ curl -X POST http://localhost:8000/predict \
 
 Invalid input, such as a negative torque or an unknown product type, is rejected with HTTP 422.
 
+## Dashboard
+
+* **Fleet monitor**: twelve machines replay held-out readings, with a Play mode, colored status cards and an alert log sorted by risk.
+* **What-if analysis**: one-click scenarios (normal, overstrain, heat dissipation, power failure), gauges showing each physics feature against its operating limit, and a risk curve showing how the failure probability changes when one sensor varies.
+* **Model report**: interactive charts for the model comparison, recall by failure mode, permutation importance and the confusion matrix.
+
 ![What-if analysis](docs/what_if.png)
 
 ## CI pipeline
